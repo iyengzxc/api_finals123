@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form>
+        <div>
+            <label for="email">Email</label>
+            <input type="email" name="email" id="email">
+        </div>
+        <div>
+            <label for="password">Password</label>
+            <input type="password" name="password" id="password">
+        </div>
+        <div>
+            <button type="button" id="signin">Sign In</button>
+        </div>
+    </form>
+
+    <script>
+        var token = localStorage.getItem('token')
+        if(token != null){
+            window.location.href='students.html'
+        }
+        var signin = document.getElementById('signin')
+
+        signin.addEventListener('click',function(){
+            var email = document.getElementById('email').value
+            var password = document.getElementById('password').value
+
+            var formData = new FormData()
+            formData.append('email',email)
+            formData.append('password',password)
+           
+
+             //ASYNC 
+            fetch('http://localhost:8000/api/login',{
+                method:'POST',
+                body:formData
+            })
+            .then(response =>{
+                return response.json()
+            })
+            .then(data => {
+                if(data.token == undefined){
+                    alert(data.message)
+                }else{
+                    localStorage.setItem('xtoken',data.token)
+                    localStorage.setItem('token',data.token)
+                    window.location.href = 'students.html'
+                }
+            })
+
+        })
+    </script>
+</body>
+</html>
